@@ -1,0 +1,109 @@
+<!-- The <main> tag specifies the main content of a document. -->
+
+<!-- SVG's are generally a better choice over bitmaps. -->
+
+ <!-- The code for an SVG is almost like HTML, the only difference being that SVG have mathematical operations in them. -->
+
+ <!-- You can either write the SVG manually using mathematical expressions but I normally use FIGMA and then export them as SVG, hence getting the relevant code. -->
+
+ <!-- Types of forms: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microblog</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar__brand">
+
+        <!-- including the header image or the logo for the blog. -->
+        <img class="navbar__logo" src="/static/microblog-logo.svg" alt="Microblog-logo">
+            Microblog
+        </div>
+
+        <ul class="navbar__navigation">
+            <li class="navbar__navigation-item">
+                <a href="#" class="navbar__link">Recent</a>
+            </li>
+
+            <li class="navbar__navigation-item">
+                <a href="#" class="navbar__link">Calender</a>
+            </li>
+        </ul>
+
+    </header>
+
+    <main class="main">
+
+        <!-- Add a new entry -->
+        <section>
+            <h1>Add a new entry.</h1>
+
+            <!-- form element to add a new entry= Get request or Post request and then specify an action. -->
+
+            <form class="form" method="POST">
+                <p class="form__input">
+                    <label for="entry" class="form__label">Entry contents:</label>
+                    <textarea name="content" id="entry" class="form__textarea"></textarea>
+                </p>
+                <button type="submit" class="form__submit">Add entry</button>
+            </form>
+        </section>
+
+        <!-- Recent Posts -->
+        <section>
+            <h1>Recent Posts</h1>
+
+            <!-- each post will be an article -->
+
+            {% for entry in entries %}
+
+                <article class="entry">
+                    <!-- the title of the post will be a div container with a heading tag of h2 -->
+                    <div>
+                        <h2 class="entry__title">
+                            {{entry[0] | truncate(30, true)}}
+                        </h2>
+                        <time class="entry__date" datetime="{{entry[1]}}">⚫ {{entry[2]}}</time>
+                    </div>
+                    <!-- the content of the post will lie in the paragraph tags or the p tags. -->
+                    <p class="entry__contents">
+                        {{entry[0]}}
+                    </p>
+                </article>
+            {% endfor %}
+        </section>
+
+    </main>
+
+    <!-- footer takes up the entire content of the page but we do not want the elements to do so -->
+     <!-- Hence we placed the elements into the div. -->
+    <footer class="footer">
+        <div class="footer__content">
+            <section class="left">
+                <a class="footer__item">Made by Tejas Sharma</a>
+                <a class="footer__item">Check out my other projects</a>
+            </section>
+            <section class="right">
+                <!-- Column 1 of the footer -->
+                <div class="footer__column">
+                    <a class="footer__item">Recent</a>
+                    <a class="footer__item">Calender</a>
+                </div>
+                <!-- Column 2 of the footer -->
+                <div class="footer__column">
+                    <a class="footer__item">About</a>
+                    <a class="footer__item">How this was made</a>
+                </div>
+
+            </section>
+        </div>
+    </footer>
+</body>
+</html>
