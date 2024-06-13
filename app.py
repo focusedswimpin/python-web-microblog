@@ -1,6 +1,6 @@
 import datetime
 import os
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
@@ -14,9 +14,6 @@ def create_app():
     app.db = client.microblog
     app.db.entries = app.db.get_collection('entries')
 
-    # Clear all entries on every restart
-    app.db.entries.delete_many({})
-
     @app.route("/", methods=["GET", "POST"])
     def home():
         if request.method == "POST":
@@ -28,6 +25,9 @@ def create_app():
 
             # Insert new entry into MongoDB
             app.db.entries.insert_one({"content": entry_content, "date": formatted_date})
+
+            # Redirect to avoid resubmission on refresh
+            return redirect(request.url)
 
         # Retrieve entries from MongoDB and format dates
         entries_with_date = []
@@ -44,7 +44,7 @@ def create_app():
                 date_formatted = "No date"
             
             entries_with_date.append((content, date_str, date_formatted))
-        
+
         return render_template("home.html", entries=entries_with_date)
-    
+
     return app
