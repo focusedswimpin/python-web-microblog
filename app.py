@@ -14,7 +14,7 @@ def create_app():
     app.db = client.microblog
     app.db.entries = app.db.get_collection('entries')
 
-    # Clear entries collection on application startup
+    # Clear all entries on every restart
     app.db.entries.delete_many({})
 
     @app.route("/", methods=["GET", "POST"])
@@ -25,6 +25,8 @@ def create_app():
             entry_content = request.form.get("content")
             # We also need the date when the entry was created.
             formatted_date = datetime.datetime.today().strftime("%Y-%m-%d")
+
+            # Insert new entry into MongoDB
             app.db.entries.insert_one({"content": entry_content, "date": formatted_date})
 
         # Retrieve entries from MongoDB and format dates
