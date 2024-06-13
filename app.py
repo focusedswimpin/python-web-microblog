@@ -7,17 +7,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def create_app():
-
     app = Flask(__name__)
 
-    # client = MongoClient("mongodb+srv://tejas:Pm(mp)05@microblog-application.h8gjluh.mongodb.net/?retryWrites=true&w=majority&appName=Microblog-Application&tlsAllowInvalidCertificates=true")
-
+    # Connect to MongoDB using the URI from environment variable
     client = MongoClient(os.getenv("MONGODB_URI"))
-
     app.db = client.microblog
-
-    # Ensure the 'entries' collection exists in MongoDB
     app.db.entries = app.db.get_collection('entries')
+
+    # Clear entries collection on application startup
+    app.db.entries.delete_many({})
 
     @app.route("/", methods=["GET", "POST"])
     def home():
@@ -48,4 +46,3 @@ def create_app():
         return render_template("home.html", entries=entries_with_date)
     
     return app
-
